@@ -6,12 +6,13 @@ app = Flask(__name__)
 @app.route('/user')
 def get_user():
     user_id = request.args.get('id')
-    # Vulnérabilité
     conn = sqlite3.connect('test.db')
     cursor = conn.cursor()
-    query = f"SELECT * FROM users WHERE id = {user_id}"
+    
+    # Requete corrigée
+    query = "SELECT * FROM users WHERE id = ?"
     try:
-        cursor.execute(query)
+        cursor.execute(query, (user_id,))
         results = cursor.fetchall()
         return str(results)
     except Exception as e:
